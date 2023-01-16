@@ -61,7 +61,7 @@ func buildComposeCmd(command string, f composeFn) *cobra.Command {
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 			composeFile := filepath.Join(composeDir, fmt.Sprintf("%s.yaml", args[0]))
-			ExecuteCommand(CommandRequest{Parts: []string{f(composeFile)}})
+			ExecuteCommand(CommandRequest{Args: []string{f(composeFile)}})
 		},
 	}
 }

@@ -1,6 +1,9 @@
 .PHONY: help
 .DEFAULT_GOAL := help
 
+VERSION = 1.0.0-alpha1
+GITSHA := $(shell git describe --always)
+
 help:
 	@echo "---------------------------------------------------------------------------------------"
 	@echo ""
@@ -16,7 +19,10 @@ go_install: ## Install Go Dependencies
 	go mod tidy && go mod download
 
 go_build: go_install ## Build Go Dependencies
-	go build -o build/anyops ./
+	go build -o build/anyops \
+		-ldflags "-X bhuwanupadhyay.github.com/anyops/cmd.ReleaseVersion=${VERSION} \
+		-X bhuwanupadhyay.github.com/anyops/cmd.GitVersion=${GITSHA}"
+
 
 go_release: go_build ## Release Go Binary
 	rm -rf ~/bin/anyops && mkdir -p ~/bin/ && cp -R build/anyops ~/bin/

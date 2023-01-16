@@ -41,7 +41,7 @@ func buildScriptCmd(command string) *cobra.Command {
 		},
 		Run: func(cmd *cobra.Command, args []string) {
 			scriptFile := filepath.Join(scriptDir, fmt.Sprintf("%s.sh", args[0]))
-			ExecuteCommand(CommandRequest{Parts: []string{readScript(scriptFile)}, Envs: args[1:]})
+			ExecuteCommand(CommandRequest{Args: []string{readScript(scriptFile)}, Envs: args[1:]})
 		},
 	}
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"anyops/cli/cmd"
+	"bhuwanupadhyay.github.com/anyops/cmd"
 	"embed"
 	"fmt"
 	"github.com/manucorporat/try"

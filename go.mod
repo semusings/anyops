@@ -1,4 +1,4 @@
-module anyops/cli
+module bhuwanupadhyay.github.com/anyops
 
 go 1.19
 

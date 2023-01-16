@@ -55,11 +55,11 @@ Use "{{.CommandPath}} [command] --help" for more information about a command.{{e
 }
 
 type CommandRequest struct {
-	Parts       []string
-	Dir         string
-	Envs        []string
-	IgnoreError bool
-	IgnoreLogs  bool
+	Args         []string
+	ScriptDir    string
+	Envs         []string
+	DoNotOnError bool
+	HideLogs     bool
 }
 
 func LogFatal(format string, v ...any) {
@@ -84,22 +84,22 @@ func buildAnyCommands(command string, crs []CommandRequest) *cobra.Command {
 }
 
 func ExecuteCommand(cr CommandRequest) {
-	command := strings.Join(cr.Parts, " ")
+	command := strings.Join(cr.Args, " ")
 	fmt.Printf(">>>>>>\nCommand:\n%s\n>>>>>>\nEnvs:\n%s\n>>>>>>\n\n", command, cr.Envs)
 	cmd := exec.Command("bash", "-c", command)
-	if cr.Dir != "" {
-		cmd.Dir = cr.Dir
+	if cr.ScriptDir != "" {
+		cmd.Dir = cr.ScriptDir
 	} else {
 		cmd.Dir = workingDir
 	}
-	if !cr.IgnoreLogs {
+	if !cr.HideLogs {
 		cmd.Stdout = os.Stdout
 	}
 	cmd.Stderr = os.Stderr
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, cr.Envs...)
 	err := cmd.Run()
-	if err != nil && !cr.IgnoreError {
+	if err != nil && !cr.DoNotOnError {
 		LogFatal("cmd.Run() failed with %s\n", err)
 	}
 }
