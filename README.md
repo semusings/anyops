@@ -1,4 +1,4 @@
-# Any Project Command Line Interface
+# AnyOps
 
 Command line interface to build application and launch docker applications for different oss products with zero configuration.
 
