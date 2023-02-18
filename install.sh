@@ -18,7 +18,7 @@ function copy_binary() {
     fi
     mv anyops "$HOME/.local/bin/anyops"
   else
-    echo "Installing Tilt to /usr/local/bin which is write protected"
+    echo "Installing anyops to /usr/local/bin which is write protected"
     echo "If you'd prefer to install Anyops without sudo permissions, add \$HOME/.local/bin to your \$PATH and rerun the installer"
     sudo mv anyops /usr/local/bin/anyops
   fi
