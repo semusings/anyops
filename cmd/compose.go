@@ -6,7 +6,6 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 var composeCmd = &cobra.Command{
@@ -23,8 +22,8 @@ var composeListCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		_ = filepath.Walk(composeDir, func(path string, info os.FileInfo, err error) error {
-			if !info.IsDir() {
-				fmt.Printf("- %s\n", strings.TrimSuffix(info.Name(), ".yaml"))
+			if info.IsDir() && info.Name() != composeDir {
+				fmt.Printf("- %s\n", info.Name())
 			}
 			return nil
 		})
@@ -60,7 +59,7 @@ func buildComposeCmd(command string, f composeFn) *cobra.Command {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			composeFile := filepath.Join(composeDir, fmt.Sprintf("%s.yaml", args[0]))
+			composeFile := filepath.Join(composeDir, fmt.Sprintf("%s/docker-compose.yaml", args[0]))
 			ExecuteCommand(CommandRequest{Args: []string{f(composeFile)}})
 		},
 	}
