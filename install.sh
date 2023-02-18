@@ -7,7 +7,7 @@
 
 # When releasing AnyOps, the releaser should update this version number
 # AFTER they upload new binaries.
-VERSION="1.0.0-alpha"
+VERSION="1.0.0"
 
 set -e
 
