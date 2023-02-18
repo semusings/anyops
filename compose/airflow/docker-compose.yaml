@@ -1,0 +1,52 @@
+version: '3.9'
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.4.3-python3.7
+  build:
+    context: ./
+    dockerfile: Dockerfile
+  environment:
+    - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@airflow_postgresql:5432/${POSTGRES_DATABASE}
+    - AIRFLOW__CORE__FERNET_KEY=FB0o_zt4e3Ziq3LdUUO7F2Z95cvFFx16hU8jTeR1ASM=
+    - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW__LOGGING__LOGGING_LEVEL=INFO
+    - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session
+  depends_on:
+    - airflow_postgresql
+services:
+  airflow_postgresql:
+    image: docker.io/bitnami/postgresql:10
+    volumes:
+      - airflow_postgresql_data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRESQL_USERNAME=${POSTGRES_USER}
+      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
+      - ALLOW_EMPTY_PASSWORD=yes
+  airflow_init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db init && airflow users create \
+        --role Admin \
+        --username admin \
+        --password admin \
+        --email airflow@airflow.com \
+        --firstname airflow \
+        --lastname airflow
+    restart: on-failure
+  airflow_webserver:
+    <<: *airflow-common
+    command: airflow webserver
+    ports:
+      - "8080:8080"
+    restart: always
+  airflow_scheduler:
+    <<: *airflow-common
+    command: airflow scheduler
+    restart: always
+volumes:
+  airflow_postgresql_data:
+
