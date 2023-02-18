@@ -5,7 +5,7 @@ Command line interface to build application and launch docker applications for d
 ## Installation
 
 ```bash
-$ npm install -g any-project
+$ 
 ```
 
 ## Docker Compose Applications
