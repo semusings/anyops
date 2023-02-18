@@ -5,7 +5,7 @@ Command line interface to build application and launch docker applications for d
 ## Installation
 
 ```bash
-$ 
+$ curl -fsSL https://raw.githubusercontent.com/bhuwanupadhyay/anyops/master/install.sh | bash
 ```
 
 ## Docker Compose Applications
