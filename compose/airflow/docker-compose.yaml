@@ -6,11 +6,13 @@ x-airflow-common: &airflow-common
     dockerfile: Dockerfile
   environment:
     - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@airflow_postgresql:5432/${POSTGRES_DATABASE}
+    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@airflow_postgresql:5432/$${POSTGRES_DATABASE}
     - AIRFLOW__CORE__FERNET_KEY=FB0o_zt4e3Ziq3LdUUO7F2Z95cvFFx16hU8jTeR1ASM=
     - AIRFLOW__CORE__LOAD_EXAMPLES=False
     - AIRFLOW__LOGGING__LOGGING_LEVEL=INFO
     - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session
+  env_file:
+    - env_file
   depends_on:
     - airflow_postgresql
 services:
@@ -19,10 +21,9 @@ services:
     volumes:
       - airflow_postgresql_data:/bitnami/postgresql
     environment:
-      - POSTGRESQL_DATABASE=${POSTGRES_DATABASE}
-      - POSTGRESQL_USERNAME=${POSTGRES_USER}
-      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
       - ALLOW_EMPTY_PASSWORD=yes
+    env_file:
+      - env_file
   airflow_init:
     <<: *airflow-common
     entrypoint: /bin/bash

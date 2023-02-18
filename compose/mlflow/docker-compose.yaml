@@ -6,9 +6,6 @@ services:
       - "9000:9000"
       - "9001:9001"
     command: server /data --console-address ':9001' --address ':9000'
-    environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
     volumes:
       - mlflow_minio_data:/data
     healthcheck:
@@ -16,29 +13,30 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
+    env_file:
+      - env_file
   mlflow_postgresql:
     image: docker.io/bitnami/postgresql:10
     volumes:
       - mlflow_postgresql_data:/bitnami/postgresql
     environment:
-      - POSTGRESQL_DATABASE=${POSTGRES_DATABASE}
-      - POSTGRESQL_USERNAME=${POSTGRES_USER}
-      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
       - ALLOW_EMPTY_PASSWORD=yes
+    env_file:
+      - env_file
   mlflow_server:
     restart: always
     build: ./
     image: anyops/mlflow_server
     ports:
       - "5000:5000"
+    command: 'mlflow server --default-artifact-root s3://mlflow/ --host 0.0.0.0'
     environment:
+      - AWS_ACCESS_KEY_ID=$${MINIO_ROOT_USER}
+      - AWS_SECRET_ACCESS_KEY=$${MINIO_ROOT_PASSWORD}
+      - MLFLOW_TRACKING_URI=postgresql://$${POSTGRESQL_USERNAME}:$${POSTGRESQL_PASSWORD}@mlflow_postgresql:5432/$${POSTGRESQL_DATABASE}
       - MLFLOW_S3_ENDPOINT_URL=http://mlflow_minio:9000
-      - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER}
-      - AWS_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
-      - POSTGRESQL_DATABASE=${POSTGRES_DATABASE}
-      - POSTGRESQL_USERNAME=${POSTGRES_USER}
-      - POSTGRESQL_PASSWORD=${POSTGRES_PASSWORD}
-    command: mlflow server --backend-store-uri postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@mlflow_postgresql:5432/${POSTGRES_DATABASE} --default-artifact-root s3://mlflow/ --host 0.0.0.0
+    env_file:
+      - env_file
 volumes:
   mlflow_minio_data:
   mlflow_postgresql_data:
