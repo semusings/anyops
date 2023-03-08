@@ -3,7 +3,7 @@ version: '3'
 
 includes:
   common: ./.taskfiles/common.yaml
-  make: ./.taskfiles/make.yaml
+  anyops: ./.taskfiles/anyops.yaml
 
 tasks:
   default:

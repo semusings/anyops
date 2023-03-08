@@ -16,7 +16,7 @@ tasks:
       - _pre-reqs
     silent: true
 
-  apply:
+  run:
     desc: Run anyops
     cmds:
       - echo "Running anyops"
