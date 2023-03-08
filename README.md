@@ -13,3 +13,4 @@ $ curl -fsSL https://raw.githubusercontent.com/bhuwanupadhyay/anyops/master/inst
 1. [Airflow](compose/airflow/README.md)
 2. [Mlflow](compose/mlflow/README.md)
 3. [OpenSearch](compose/opensearch/README.md)
+4. [Neo4j](compose/neo4j/README.md)
