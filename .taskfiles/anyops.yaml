@@ -1,0 +1,31 @@
+---
+version: '3'
+
+tasks:
+  install:
+    desc: Install anyops
+    cmds:
+      - echo "Installing anyops"
+      - go mod tidy
+      - go mod download
+      - mkdir -p ".bin"
+      - go build -o .bin/anyops ./
+      - chmod +x .bin/anyops
+      - task common:_path-notify
+    deps:
+      - _pre-reqs
+    silent: true
+
+  apply:
+    desc: Run anyops
+    cmds:
+      - echo "Running anyops"
+      - .bin/anyops {{ .ARGS }}
+    deps:
+      - install
+    silent: true
+
+  _pre-reqs:
+    cmds:
+      - task common:_need BIN=wget
+    silent: true

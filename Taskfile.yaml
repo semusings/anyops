@@ -1,0 +1,12 @@
+---
+version: '3'
+
+includes:
+  common: ./.taskfiles/common.yaml
+  make: ./.taskfiles/make.yaml
+
+tasks:
+  default:
+    cmds:
+      - task -l
+    silent: true

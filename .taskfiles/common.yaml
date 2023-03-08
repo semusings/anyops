@@ -1,0 +1,34 @@
+---
+version: '3'
+
+vars:
+  DETECTED_OS:
+    sh: echo "$(uname -s | tr '[:upper:]' '[:lower:]')"
+  DETECTED_ARCH:
+    sh: echo "$(uname -m | tr '[:upper:]' '[:lower:]')"
+
+tasks:
+  detect:
+    desc: Detect operating system
+    cmds:
+      - echo "OS -> {{.DETECTED_OS}}"
+      - echo "ARCH -> {{.DETECTED_ARCH}}"
+    silent: true
+
+  _path-notify:
+    cmds:
+      - echo "Be sure to update your PATH, PATH=\$PATH:\$PWD/.bin"
+    silent: true
+
+  _need:
+    cmds:
+      - type {{ .BIN }} 2>&1 >/dev/null || (echo "Please install {{.BIN}}"; exit 1)
+    silent: true
+
+  _pre-reqs:
+    cmds:
+      - task tools:_need BIN=wget
+      - task tools:_need BIN=python3
+      - task tools:_need BIN=go
+      - task tools:_need BIN=docker
+    silent: true
